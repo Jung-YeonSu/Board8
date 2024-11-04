@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.users.mapper.UserMapper">  
+   
+  <insert id="insertUser">
+  	INSERT INTO TUSER (USERID, PASSWD, USERNAME, EMAIL) 
+  	 VALUES (#{userid}, #{passwd}, #{username}, #{email})
+  </insert>
+ 
+  
+  <select id="getUserList">
+  	SELECT USERID, 
+  	       USERNAME, 
+  	       EMAIL,
+  	       UPOINT, 
+  	       TO_CHAR(REGDATE, 'YYYY-MM-DD') REGDATE
+    FROM TUSER
+  </select>
+  
+  <delete id="deleteUser">
+  	DELETE FROM TUSER WHERE USERID = #{userid}
+  </delete>
+  
+  <select id="getInfo">
+  	SELECT * FROM TUSER WHERE USERID = #{userid}
+  </select>
+  
+  <update id="updateUser">
+  	UPDATE TUSER 
+  	SET PASSWD = #{passwd},EMAIL = #{email} 
+  	WHERE USERID = #{userid}
+  </update>
+  
+  <select id="idDupCheck">
+  	SELECT USERID, 
+  	       USERNAME, 
+  	       EMAIL,
+  	       UPOINT, 
+  	       TO_CHAR(REGDATE, 'YYYY-MM-DD') REGDATE
+  	FROM	 TUSER WHERE USERID = #{userid}
+  </select>
+  
+  <!-- login userid : arg0, param1 -->
+	<select id="login">
+		SELECT USERID, 
+  	       USERNAME, 
+  	       EMAIL,
+  	       UPOINT, 
+  	       TO_CHAR(REGDATE, 'YYYY-MM-DD') REGDATE
+		FROM TUSER WHERE USERID=#{arg0} AND PASSWD=#{arg1}
+	</select>
+  
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

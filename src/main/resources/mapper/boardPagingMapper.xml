@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.paging.mapper.BoardPagingMapper">  
+  
+ 
+ 	<select id="count">
+ 		SELECT   COUNT(*) AS CNT
+ 		FROM     BOARD
+ 		WHERE    MENU_ID = #{menu_id}
+ 	</select>
+ 
+ 	<select id="countAll">
+ 		SELECT   COUNT(*) AS CNT
+ 		FROM     BOARD
+ 	</select>
+ 	
+ 	<select id="getBoardPagingList">
+ 			SELECT
+ 							IDX,
+ 							MENU_ID,
+ 							TITLE,
+ 							WRITER,
+ 							TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE,
+ 							HIT
+ 							
+ 			FROM		BOARD
+ 			<where>
+ 				<if test="arg0 != null and arg0 !=''">
+ 						AND MENU_ID = #{arg0} 				
+ 				</if>
+ 				<if test="arg1 != null and arg1 !=''">
+ 						AND TITLE = #{arg1} 				
+ 				</if>
+ 				<if test="arg2 != null and arg2 !=''">
+ 						AND CONTENT = #{arg2} 				
+ 				</if>
+ 				<if test="arg3 != null and arg3 !=''">
+ 						AND WRITER = #{arg3} 				
+ 				</if>
+ 			</where>
+ 			  	ORDER BY IDX ASC
+  				OFFSET #{arg4} ROWS FETCH NEXT #{arg5} ROWS ONLY
+ 	</select>
+ 	<select id="getAllBoardPagingList">
+ 			SELECT
+ 							IDX,
+ 							MENU_ID,
+ 							TITLE,
+ 							WRITER,
+ 							TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE,
+ 							HIT
+ 							
+ 			FROM		BOARD
+ 			<where>
+ 				<if test="arg0 != null and arg0 !=''">
+ 						AND TITLE = #{arg0} 				
+ 				</if>
+ 				<if test="arg1 != null and arg1 !=''">
+ 						AND CONTENT = #{arg1} 				
+ 				</if>
+ 				<if test="arg2 != null and arg2 !=''">
+ 						AND WRITER = #{arg2} 				
+ 				</if>
+ 			</where>
+ 			  	ORDER BY IDX ASC
+  				OFFSET #{arg3} ROWS FETCH NEXT #{arg4} ROWS ONLY
+ 	</select>
+ 	
+ 	<select id="getBoard">
+ 		SELECT * FROM BOARD WHERE IDX = #{idx}
+ 	</select>
+ 	
+ 	<update id="incHit">
+ 		UPDATE BOARD SET HIT = HIT+1 WHERE IDX=#{idx}
+ 	</update>
+
+ 	
+ 	  <insert id="insertBoard">
+  	INSERT INTO board (
+	    idx,
+	    menu_id,
+	    title,
+	    content,
+	    writer
+		) VALUES (
+    	(SELECT NVL(MAX(IDX),0)+1 FROM BOARD),
+	    #{menu_id},
+	    #{title},
+	    #{content},
+	    #{writer}
+		)
+  </insert>
+ 	
+ 	<delete id="deleteBoard">
+ 		DELETE FROM BOARD WHERE IDX=#{idx}
+ 	</delete>
+ 	
+ 	<update id="updateBoard">
+ 		UPDATE BOARD SET TITLE=#{title}, CONTENT=#{content}, MENU_ID=#{menu_id}
+ 			WHERE IDX = #{idx}
+ 	</update>
+ 	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

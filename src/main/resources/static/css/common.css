@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+ * {
+     margin : 0; padding:0;
+     box-sizing : border-box;
+  }
+  
+  main {
+  	max-width: 1200px;
+    width: 80%;
+    margin : 30px auto;
+    font-family: "Pretendard";
+    font-size: 14px;
+  }
+ 
+  table, th, td  {
+     border:1px solid #333;
+     border-collapse: collapse;
+  }
+  
+  ul,li { list-style: none;  }
+  
+  a        { text-decoration:none;      color : inherit; }
+  a:hover  { text-decoration:underline;  }
+  
+  h2 {
+    margin: 15px 0px;
+  }
+
+	input[name="title"]{
+		color : #555;
+		letter-spacing: 0.3px
+	}
+
+	input[name="title"]::placeholder{
+		color : #ccc
+	}
+
+  #menu{
+	width : 100%;
+	display : flex;
+	justify-content : space-between;
+	align-items : center;
+	background: #eee;
+	margin : 30px auto 60px;
+	border-radius : 30px;
+
+	
+	& li{
+		width : calc(100%/8);
+		text-align : center;
+		font-weight: bold;
+		border : none;
+		border-radius : 30px;
+		transition : all .4s;
+		overflow : hidden;
+		
+		& a{
+			display: block;
+			width: 100%;
+			padding : 8px 16px;
+			border-radius : 30px;
+		}
+	}
+}
+  
+ .menu-active a{
+			background : #333;
+			color : white
+}
+
+ .menu-active a:hover{
+			text-decoration: none
+}
+
+select{
+	cursor: pointer;
+}
+
+ #table li{
+	margin : 16px 0
+}
+
+#table li:nth-child(2){
+	border-top: solid 1px #eee;
+	padding : 12px 0;
+	border-bottom: solid 1px #eee;
+}
+  
+  
+  
