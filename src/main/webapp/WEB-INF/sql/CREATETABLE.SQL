@@ -29,3 +29,23 @@ CREATE TABLE BOARD(
 	REGDATE      DATE                 DEFAULT SYSDATE,
 	HIT          NUMBER(9,0)          DEFAULT 0
 )
+
+-- 멀티게시판 - 자료실
+CREATE  TABLE  FILES
+(
+     FILE_NUM    NUMBER(6,0)    NOT NULL    -- 파일번호
+   , IDX         NUMBER(6,0)    NOT NULL    -- 게시글 번호
+   , FILENAME    VARCHAR2(300)  NOT NULL    -- 파일이름
+   , FILEEXT     VARCHAR2(300)  NOT NULL    -- 파일확장자
+   , SFILENAME   VARCHAR2(300)  NOT NULL    -- 저장된 실제 파일명
+   
+   , CONSTRAINT   FILES_PK       PRIMARY KEY   -- 기본키(복합키)
+   (
+       FILE_NUM,
+       IDX
+   )
+   , CONSTRAINT   FK_BOARD_FILES_IDX
+     FOREIGN KEY  (IDX)
+     REFERENCES   BOARD(IDX)
+     ON  DELETE   CASCADE
+);
