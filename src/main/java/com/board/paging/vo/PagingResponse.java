@@ -15,10 +15,9 @@ public class PagingResponse<T> {
 	// 아래의 paging.jsp에서 사용할 변수들
 	private Pagination pagination;
 
+	// 생성자
 	public PagingResponse(List<T> list, Pagination pagination) {
 		this.list.addAll(list);
 		this.pagination = pagination;
-	}
-	
-	
+	}	
 }

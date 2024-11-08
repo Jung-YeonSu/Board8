@@ -33,13 +33,40 @@
 		
 	& tr:nth-child(2) td {text-align: center;}	
 	}
+	#paging table {
+	position: absolute;
+	bottom : 160px;
+	left : 50%;
+	width : 60%;
+	transform: translateX(-50%);
+	border: none;
+	& tr, td {
+	border: none
+	};
+	& td{
+		padding : 8px;
+		text-align: center
+	}
 	
+	& td:first-child a, td:last-child a{
+		width : 60px;
+	}
+	
+	& a{
+		margin : 0 5px}
+	
+}
+
+.searchForm{
+	margin: 60px auto;
+	text-align: center
+}
 	
 </style>
 </head>
 <body>
 	<main>
-		<%@include file="/WEB-INF/include/menus.jsp" %>
+		<%@include file="/WEB-INF/include/pdsMenus.jsp" %>
 	
 		<h2>${menu_name} 게시물 목록 ${sessionScope.login.userid ? sessionScope.login.userid : ""}</h2>
 		<table id="table">
@@ -61,10 +88,10 @@
 			</tr>
 			<tr>
 			<td colspan="5"></td>
-				<td>[<a href="/Board/WriteForm?menu_id=${menu_id == null? 'all' : menu_id}">새 글 추가</a>]
+				<td>[<a href="/Pds/WriteForm?menu_id=${menu_id == null? 'all' : menu_id}&nowpage=${map.nowpage}">새 글 추가</a>]
 				</td>
 			</tr>
-			<c:forEach var="pds" items="${pdsList}">
+			<c:forEach var="pds" items="${response.list}">
 				<tr>
 					<td>${pds.idx}</td>
 					<td style="text-align: left; padding-left:12px">
@@ -77,11 +104,25 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<%@include file="/WEB-INF/include/pdsPaging.jsp" %>
+		<div class="searchForm">
+			<form action="/Pds/List" method="GET">
+				<input type="hidden" name="menu_id" value="${map.menu_id}"/>
+				<input type="hidden" name="nowpage" value="${map.nowpage}"/>
+				<select name="search">
+					<option value="title">제목</option>
+					<option value="writer">작성자</option>
+					<option value="content">내용</option>
+				</select>
+				<input type="text" name="searchtext"/>
+				<input type="submit" value="검색"/>
+			</form>		
+		</div>
+		
 	</main>
 <script>
-	const url = "${menu_id}"
+	const url = "${map.menu_id}"
 	const $menus = document.querySelectorAll("#menu li");
-	
 	
 	if(url === "all"){
 		$menus[0].classList.add("menu-active");

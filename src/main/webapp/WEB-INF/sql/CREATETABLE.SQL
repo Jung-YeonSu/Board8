@@ -5,8 +5,10 @@ CREATE  TABLE   MENUS (
     ,MENU_SEQ    NUMBER(5)
 );
 
+
 INSERT  INTO   MENUS  VALUES ('MENU01', 'JAVA', 1 );
 COMMIT;
+
 
 -- 회원정보
 CREATE TABLE TUSER (
@@ -30,6 +32,7 @@ CREATE TABLE BOARD(
 	HIT          NUMBER(9,0)          DEFAULT 0
 )
 
+
 -- 멀티게시판 - 자료실
 CREATE  TABLE  FILES
 (
@@ -49,3 +52,21 @@ CREATE  TABLE  FILES
      REFERENCES   BOARD(IDX)
      ON  DELETE   CASCADE
 );
+
+
+-- GET_FILENUM FUNCTION
+
+		CREATE FUNCTION GET_FILENUM RETURN NUMBER 
+		AS 
+		  V_NUM  NUMBER(10);
+		BEGIN
+		    SELECT 
+		      (SELECT NVL(MAX(FILE_NUM),0)+1 FROM FILES)
+		      INTO
+		        V_NUM
+		    FROM DUAL;
+		    
+		    RETURN V_NUM;
+		END;
+		/
+

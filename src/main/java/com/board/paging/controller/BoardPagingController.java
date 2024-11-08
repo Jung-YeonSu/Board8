@@ -38,7 +38,6 @@ public class BoardPagingController {
 		
 		String 	menu_id 	= boardVo.getMenu_id();
 		int  count  = boardPagingMapper.count(boardVo);
-		System.out.println(count);
 		if(menu_id.equals("all")) {
 			count  = boardPagingMapper.countAll(boardVo);
 		}

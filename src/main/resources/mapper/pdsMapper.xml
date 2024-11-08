@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.pds.mapper.PdsMapper">  
+  
+  <!-- 파일수가 포함되고 검색이 가능한 게시글 조회 -->
+  <select id="getPdsList">
+  	SELECT
+	    B.IDX,
+	    TITLE,
+	    WRITER,
+	    ( 
+	    	SELECT COUNT(*)
+	      FROM   FILES F
+	      WHERE  B.IDX = F.IDX 
+	     ) FILESCOUNT,
+	    TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE,
+	    HIT 
+		FROM  	 BOARD B 
+		WHERE 1=1
+			<if test="menu_id != null and menu_id !=''">
+					AND MENU_ID = #{menu_id} 				
+			</if>
+			<if test="search != null and search !=''">
+					AND ${search} Like '%' || #{searchtext} || '%' 				
+			</if>
+		ORDER BY B.IDX DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{recordSize} ROWS ONLY
+  </select>
+  
+  <!-- 
+  	${search}     숫자 그냥 표시, 문자도 그냥 표시
+  	#{searchtext} 숫자 그냥 표시, 문자를 '' 추가해준다.
+   -->
+  
+
+  <!-- 게시글 작성 -->
+	<insert id="setWrite">
+		INSERT INTO board 
+			(
+		    IDX,
+		    MENU_ID,
+		    TITLE,
+		    CONTENT,
+		    WRITER	
+		  ) 
+	  VALUES 
+	  	(
+		    (SELECT NVL(MAX(IDX)+1,0) FROM BOARD),
+		    #{menu_id},
+		    #{title},
+		    #{content},
+		    #{writer} 
+		  )
+	</insert>
+	
+	
+	<!-- Files 테이블에 파일 여러개 추가 -->
+	<insert id="setFileWriter">
+	 	<foreach collection ="fileList" item ="file" index ="i" 
+	 					 open ="INSERT ALL" close ="SELECT * FROM DUAL"
+	 					 separator =" ">
+		INTO files (
+	    FILE_NUM,
+	    IDX,
+	    FILENAME,
+	    FILEEXT,
+	    SFILENAME ) 
+    VALUES (
+	    (SELECT NVL(MAX(FILE_NUM), 0) FROM FILES) + #{i} + 1,
+	    (SELECT MAX(IDX) FROM BOARD),
+	    #{file.filename},
+	    #{file.fileext},
+	    #{file.sfilename} )
+		</foreach>
+	</insert>
+	
+
+  <!-- 페이징을 위한 게시글 수 조회 -->
+	<select id="count">
+		SELECT COUNT(*) FROM BOARD WHERE MENU_ID = #{menu_id}
+	</select>
+	
+
+	<!-- 조회수 증가 -->
+	<update id="setReadCountUpdate">
+		UPDATE BOARD 
+		SET    HIT = HIT+1
+		WHERE  IDX = #{idx}	
+	</update>
+	
+
+ <!-- 게시글 조회 -->
+	<select id="getPds">
+		SELECT
+	    IDX,
+	    TITLE,
+      CONTENT,
+	    WRITER,
+	    TO_CHAR(REGDATE,'YYYY-MM-DD') REGDATE,
+	    HIT 
+		FROM  	 BOARD 
+		WHERE    IDX = #{idx} 
+	</select>
+	
+
+ <!-- 게시글의 파일 리스트 조회 -->
+	<select id="getFileList">
+		SELECT
+      FILE_NUM,
+      IDX,
+      FILENAME,
+      FILEEXT,
+      SFILENAME
+    FROM
+      FILES
+    WHERE
+      IDX = #{idx}
+	</select>
+	
+	
+	<!-- 게시글 수정 -->
+	<update id="setUpdate">
+		UPDATE BOARD
+		SET    TITLE   = #{title},
+			     CONTENT = #{content},
+			     MENU_ID = #{menu_id}
+		WHERE  IDX     = #{idx}
+	</update>
+	
+	  <select  id="getFileInfo">
+    SELECT
+        FILE_NUM,
+        IDX,
+        FILENAME,
+        FILEEXT,
+        SFILENAME 
+     FROM   
+        FILES 
+     WHERE
+        FILE_NUM = #{ file_num }     
+  </select>
+  
+  <delete id="deleteUploadFileNum">
+  	DELETE FROM FILES WHERE FILE_NUM = #{file_num}
+  </delete>
+
+	<!-- idx 에 해당하는 Files 정보를 삭제 -->
+	<delete id="deleteUploadFile">
+		DELETE
+		FROM   FILES
+		WHERE  IDX = #{idx}
+	</delete>
+  
+  <delete id="setDelete">
+  	DELETE FROM BOARD WHERE IDX = #{idx}
+  </delete>
+
+</mapper>

@@ -36,7 +36,7 @@
 	<div><a href="/Pds/List?nowpage=1&menu_id=MENU01">자료실 목록</a></div>
 	<div><a href="/Pds/WriteForm?nowpage=1&menu_id=MENU01">자료실 등록</a></div>
 	<span>
-		${sessionScope.login.username != null ? sessionScope.login.username : "<a href='/Users/LoginForm'>로그인</a>"}
+		${sessionScope.login.username != null ? sessionScope.login.username : "<a href='/Users/LoginForm?nowpage=1'>로그인</a>"}
 		${sessionScope.login.username != null ? "<a href='/Users/Logout'>로그아웃</a>" : ""}
 	</span>
   </main>	
